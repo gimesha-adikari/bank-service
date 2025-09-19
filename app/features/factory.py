@@ -9,7 +9,6 @@ from app.features.portrait.simple import SimplePortraitExtractor
 class FeatureFactory:
     def __init__(self):
         self.settings = get_settings()
-        # For now only 'simple'. Later: branch on settings.face_backend == 'insightface', etc.
         self._face = SimpleFaceMatcher()
         self._live = SimpleLivenessDetector()
         self._ocr  = SimpleOcrEngine()
