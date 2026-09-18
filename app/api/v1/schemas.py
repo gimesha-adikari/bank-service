@@ -7,8 +7,11 @@ class KycPayload(BaseModel):
     selfie: Optional[Base64Bytes] = Field(default=None, description="base64-encoded selfie image")
     docFront: Optional[Base64Bytes] = Field(default=None, description="base64-encoded ID front (legacy)")
     docFrontImage: Optional[Base64Bytes] = Field(default=None, description="base64-encoded ID front")
+    docBack: Optional[Base64Bytes] = Field(default=None, description="base64-encoded ID back (legacy)")
     docBackImage: Optional[Base64Bytes] = Field(default=None, description="base64-encoded ID back")
     docPortraitImage: Optional[Base64Bytes] = Field(default=None, description="base64-encoded portrait crop from document")
+    addressProofImage: Optional[Base64Bytes] = Field(default=None, description="base64-encoded proof of address")
+    meta: Optional[Dict[str, str]] = Field(default=None, description="optional country/document hints")
 
 class KycResult(BaseModel):
     type: str

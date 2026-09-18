@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from functools import lru_cache
+import os
+from typing import Optional
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
@@ -18,9 +21,12 @@ class Settings(BaseSettings):
     live_threshold: float = 0.80
     ocr_threshold: float  = 0.80
     doc_threshold: float = 0.80
+    address_threshold: float = 0.75
 
     # backend selectors
     face_backend: str = "simple"
+    liveness_backend: str = "simple"
+    # Compatibility setting retained for older local .env files.
     live_backend: str = "simple"
     ocr_backend: str = "simple"
     doc_backend: str = "simple"
