@@ -1,6 +1,6 @@
-# banking-service
+# bank-service
 
-FastAPI service for the BankingSystem AI/KYC capabilities. The service exposes
+FastAPI AI/KYC service for bank-core. The service exposes
 the existing KYC and health routes under its FastAPI application; it is versioned
 independently from the Spring Boot backend and web/mobile clients.
 
@@ -38,6 +38,6 @@ are not installed.
 
 ## Related repositories
 
-- [BankingSystem](https://github.com/gimesha-adikari/BankingSystem) — Spring Boot core banking API
-- [bank-web](https://github.com/gimesha-adikari/bank-web) — React/Vite web client
-- [BankApp](https://github.com/gimesha-adikari/BankApp) — Android client
+- [bank-core](https://github.com/gimesha-adikari/bank-core) — Spring Boot authoritative banking API
+- [bank-web](https://github.com/gimesha-adikari/bank-web) — Next.js web client
+- [bank-app](https://github.com/gimesha-adikari/bank-app) — Android client
