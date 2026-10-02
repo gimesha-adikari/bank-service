@@ -32,8 +32,11 @@ try:
     import httpx
     host = os.getenv("APP_HOST", "127.0.0.1")
     port = int(os.getenv("APP_PORT", "8000"))
+    service_secret = os.getenv("BANK_SERVICE_AUTH_SECRET")
+    if not service_secret:
+        raise RuntimeError("BANK_SERVICE_AUTH_SECRET must be set")
     url = f"http://{host}:{port}/api/v1/kyc/ping"
-    with httpx.Client(timeout=2.0) as client:
+    with httpx.Client(timeout=2.0, headers={"X-Bank-Core-Auth": service_secret}) as client:
         r = client.get(url)
         print("/api/v1/kyc/ping:", r.status_code, r.text[:120])
         assert r.status_code == 200
