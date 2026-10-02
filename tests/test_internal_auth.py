@@ -60,6 +60,27 @@ def test_aggregate_accepts_trusted_bank_user_id(client):
     assert response.status_code == 200
 
 
+def test_internal_auth_uses_application_settings(monkeypatch):
+    from app.core.config import Settings
+    from app.main import create_app
+
+    monkeypatch.delenv("BANK_SERVICE_AUTH_SECRET", raising=False)
+    configured_secret = "custom-app-secret-012345678901234567890123"
+    custom_app = create_app(
+        Settings(_env_file=None, BANK_SERVICE_AUTH_SECRET=configured_secret)
+    )
+    custom_client = TestClient(custom_app)
+
+    assert custom_client.get(
+        "/api/v1/kyc/ping",
+        headers={"X-Bank-Core-Auth": "test-service-secret-012345678901234567890123"},
+    ).status_code == 401
+    assert custom_client.get(
+        "/api/v1/kyc/ping",
+        headers={"X-Bank-Core-Auth": configured_secret},
+    ).status_code == 200
+
+
 def test_service_secret_uses_exact_external_environment_name(monkeypatch):
     from app.core.config import Settings
 
