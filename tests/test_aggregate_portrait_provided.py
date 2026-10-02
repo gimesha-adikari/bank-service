@@ -2,6 +2,7 @@ from io import BytesIO
 from PIL import Image, ImageDraw
 import base64
 from _helpers import _png_b64, _face_like
+from uuid import uuid4
 
 
 def test_aggregate_approve_with_provided_portrait(client, monkeypatch):
@@ -16,6 +17,7 @@ def test_aggregate_approve_with_provided_portrait(client, monkeypatch):
     selfie = _face_like()
     portrait = selfie.copy()
     payload = {
+        "bankUserId": str(uuid4()),
         "selfie": _png_b64(selfie),
         "docPortraitImage": _png_b64(portrait),
     }

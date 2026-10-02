@@ -25,6 +25,10 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 The Spring Boot backend reaches this service through its configured HTTP service
 URL (for example `ML_BASE_URL`); no sibling-directory assumption is required.
+KYC routes require the server-only `BANK_SERVICE_AUTH_SECRET` value in the
+`X-Bank-Core-Auth` header. Keep the value in ignored local environment
+configuration, replace the example placeholder with a random value of at least
+32 UTF-8 bytes, and configure the same value in bank-core.
 
 ## Verification
 

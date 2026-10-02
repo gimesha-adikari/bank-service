@@ -10,7 +10,8 @@ from app.core.calib_log import write_row
 from app.core.config import get_settings, segmented_threshold
 from app.core.policy import decide
 from app.features.factory import get_factory
-from fastapi import APIRouter, Response, BackgroundTasks, HTTPException
+from fastapi import APIRouter, Response, BackgroundTasks, HTTPException, Depends
+from app.core.internal_auth import require_bank_core_auth
 from app.features.address.address_match import address_match_score
 
 from .schemas import KycPayload, KycResult, AggregateResponse, CheckResult
@@ -21,7 +22,11 @@ try:
 except Exception:
     cv2, np = None, None
 
-router = APIRouter(prefix="/kyc", tags=["kyc"])
+router = APIRouter(
+    prefix="/kyc",
+    tags=["kyc"],
+    dependencies=[Depends(require_bank_core_auth)],
+)
 log = logging.getLogger("bank_ai.kyc")
 
 
@@ -366,6 +371,8 @@ def doc_class(p: KycPayload):
 
 @router.post("/aggregate", response_model=AggregateResponse)
 def aggregate(p: KycPayload, response: Response, background_tasks: BackgroundTasks):
+    if p.bankUserId is None:
+        raise HTTPException(status_code=400, detail="bankUserId is required")
     settings = get_settings()
     fac = get_factory()
 

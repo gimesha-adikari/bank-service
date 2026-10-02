@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 from typing import Optional, Dict, Any, List
+from uuid import UUID
 from pydantic import BaseModel, Field, Base64Bytes
 
 class KycPayload(BaseModel):
+    bankUserId: Optional[UUID] = Field(default=None, description="trusted bank-core subject")
     selfie: Optional[Base64Bytes] = Field(default=None, description="base64-encoded selfie image")
     docFront: Optional[Base64Bytes] = Field(default=None, description="base64-encoded ID front (legacy)")
     docFrontImage: Optional[Base64Bytes] = Field(default=None, description="base64-encoded ID front")
