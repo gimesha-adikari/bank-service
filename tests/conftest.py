@@ -19,6 +19,7 @@ os.environ.setdefault("APP_FACE_THRESHOLD", "0.85")
 os.environ.setdefault("APP_LIVE_THRESHOLD", "0.80")
 os.environ.setdefault("APP_OCR_THRESHOLD",  "0.80")
 os.environ.setdefault("APP_DOC_THRESHOLD",  "0.80")
+os.environ.setdefault("BANK_SERVICE_AUTH_SECRET", "test-service-secret-012345678901234567890123")
 
 # Import AFTER sys.path fix
 from app.main import app  # noqa: E402
@@ -26,7 +27,7 @@ from starlette.testclient import TestClient  # noqa: E402
 
 @pytest.fixture(scope="session")
 def client():
-    return TestClient(app)
+    return TestClient(app, headers={"X-Bank-Core-Auth": os.environ["BANK_SERVICE_AUTH_SECRET"]})
 
 # ---- NEW: clear settings cache per test so monkeypatch.setenv takes effect ----
 @pytest.fixture(autouse=True)

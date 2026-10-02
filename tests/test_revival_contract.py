@@ -2,9 +2,7 @@ import json
 from pathlib import Path
 
 import pytest
-from fastapi.testclient import TestClient
-
-from app.main import app
+from uuid import uuid4
 
 
 FIXTURES = Path(__file__).resolve().parents[1] / "app" / "tests" / "fixtures"
@@ -14,9 +12,10 @@ FIXTURES = Path(__file__).resolve().parents[1] / "app" / "tests" / "fixtures"
     ("name", "expected"),
     (("approve.json", "APPROVE"), ("under_review.json", "UNDER_REVIEW"), ("reject.json", "REJECT")),
 )
-def test_preserved_aggregate_fixtures_keep_the_decision_contract(name: str, expected: str):
+def test_preserved_aggregate_fixtures_keep_the_decision_contract(name: str, expected: str, client):
     payload = json.loads((FIXTURES / name).read_text(encoding="utf-8"))
-    response = TestClient(app).post("/api/v1/kyc/aggregate", json=payload)
+    payload["bankUserId"] = str(uuid4())
+    response = client.post("/api/v1/kyc/aggregate", json=payload)
 
     assert response.status_code == 200, response.text
     assert response.headers.get("X-Request-ID")

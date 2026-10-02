@@ -1,6 +1,7 @@
 import base64
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFilter
+from uuid import uuid4
 
 def _png_b64(img):
     buf = BytesIO(); img.save(buf, format="PNG")
@@ -37,6 +38,7 @@ def test_aggregate_approve_path(client):
         "ID: ABC1234567"
     ])
     payload = {
+        "bankUserId": str(uuid4()),
         "selfie": _png_b64(selfie),
         "docFrontImage": _png_b64(docfront),
     }

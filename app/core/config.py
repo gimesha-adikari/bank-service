@@ -4,12 +4,14 @@ from functools import lru_cache
 import os
 from typing import Optional
 
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     app_name: str = "Bank AI Service"
     app_version: str = "0.1.0"
     api_prefix: str = "/api/v1"
+    bank_service_auth_secret: str = Field(validation_alias="BANK_SERVICE_AUTH_SECRET")
 
     # feature flags
     enable_feature_kyc: bool = True
@@ -47,6 +49,21 @@ class Settings(BaseSettings):
         env_file=".env",
         extra="ignore",
     )
+
+    @model_validator(mode="after")
+    def validate_service_auth_secret(self) -> "Settings":
+        secret = self.bank_service_auth_secret
+        if not secret or not secret.strip():
+            raise ValueError("BANK_SERVICE_AUTH_SECRET must be configured")
+        if secret.strip() in {
+            "CHANGE_ME",
+            "CHANGE_ME_TO_A_RANDOM_SECRET",
+            "local-development-secret-change-me-before-sharing",
+        }:
+            raise ValueError("BANK_SERVICE_AUTH_SECRET uses a forbidden placeholder")
+        if len(secret.encode("utf-8")) < 32:
+            raise ValueError("BANK_SERVICE_AUTH_SECRET must be at least 32 UTF-8 bytes")
+        return self
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
